@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import '@/styles/globals.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

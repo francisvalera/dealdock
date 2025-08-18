@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+// next.config.mjs  (replace file)
 const nextConfig = {
   reactStrictMode: true,
   images: {

@@ -1,4 +1,4 @@
-import { PrismaClient, type Product, type User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -26,19 +26,16 @@ type SeedOrderItem = {
   sku: string | null;
   size: string | null;
   qty: number;
-  price: number; // Prisma accepts number for Decimal
+  price: number; // number is OK for Decimal inputs
 };
 
 async function main(): Promise<void> {
-  // Settings
   await prisma.settings.create({ data: {} }).catch(() => undefined);
 
-  // Brands
   for (const name of brands) {
     await prisma.brand.upsert({ where: { name }, update: {}, create: { name } });
   }
 
-  // Categories + Subcategories
   for (const c of categories) {
     const cat = await prisma.category.create({ data: { name: c.name, featured: c.featured } });
     for (const s of c.subs) {
@@ -46,7 +43,6 @@ async function main(): Promise<void> {
     }
   }
 
-  // Admin
   const adminPass = await bcrypt.hash('Password123!', 10);
   await prisma.user.upsert({
     where: { email: 'admin@kuyakardz.com' },
@@ -54,16 +50,15 @@ async function main(): Promise<void> {
     create: { email: 'admin@kuyakardz.com', name: 'Admin', role: 'ADMIN', password: adminPass }
   });
 
-  // Customers
   const userPass = await bcrypt.hash('Password123!', 10);
   for (const name of avengers) {
     const email = name.toLowerCase().replace(/\s+/g, '.') + '@example.com';
     await prisma.user.upsert({ where: { email }, update: {}, create: { email, name, password: userPass } });
   }
 
-  // Products (10)
   const anyBrand = await prisma.brand.findFirstOrThrow();
   const anySub = await prisma.subcategory.findFirstOrThrow();
+
   for (let i = 1; i <= 10; i++) {
     const p = await prisma.product.create({
       data: {
@@ -74,7 +69,7 @@ async function main(): Promise<void> {
         subcategoryId: anySub.id,
         model: i % 2 ? 'Mio' : 'Raider',
         size: i % 2 ? 'M' : 'L',
-        price: 1000 + 50 * i, // number OK for Decimal
+        price: 1000 + 50 * i,
         stock: 20 + i,
         isFeatured: i <= 8
       }
@@ -82,14 +77,17 @@ async function main(): Promise<void> {
     await prisma.productImage.create({ data: { productId: p.id, url: '/kklogo.jfif', primary: true } });
   }
 
-  // Orders (10 dummy)
-  const users: User[] = await prisma.user.findMany({ where: { role: 'USER' } });
-  const products: Product[] = await prisma.product.findMany({ take: 3 });
+  for (let i = 1; i <= 5; i++) {
+    await prisma.carouselItem.create({ data: { imageUrl: `https://via.placeholder.com/1920x900?text=Promo+${i}`, sort: i } });
+  }
+
+  const users = await prisma.user.findMany({ where: { role: 'USER' } });
+  const products = await prisma.product.findMany({ take: 3 });
 
   for (let i = 0; i < 10; i++) {
-    const user: User = users[i % users.length]!;
+    const user = users[i % users.length]!;
 
-    const items: SeedOrderItem[] = products.map((pr: Product, idx: number): SeedOrderItem => ({
+    const items: SeedOrderItem[] = products.map((pr, idx) => ({
       productId: pr.id,
       name: pr.name,
       sku: pr.sku ?? null,
@@ -98,10 +96,7 @@ async function main(): Promise<void> {
       price: Number(pr.price)
     }));
 
-    const total: number = items.reduce(
-      (sum: number, it: SeedOrderItem) => sum + it.price * it.qty,
-      0
-    );
+    const total = items.reduce((sum, it) => sum + it.price * it.qty, 0);
 
     const order = await prisma.order.create({ data: { userId: user.id, total } });
 

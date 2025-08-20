@@ -42,3 +42,18 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+mt-ecom/
+
+
+*.bundle
+mt-ecom/
+
+
+*.prev.*
+*.v1.*
+*.v2.*
+*.bak
+*.old
+*.scaffold.*
+

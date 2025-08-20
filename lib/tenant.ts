@@ -1,7 +1,6 @@
 import "server-only";
 import { headers } from "next/headers";
 
-export type Role = "ADMIN" | "STAFF" | "CUSTOMER";
 export type MenuItem = { label: string; href: string };
 export type TenantConfig = {
   tenantId: string;

@@ -7,7 +7,7 @@ export default function ProductCard({ p, redirectTo }: { p: Product; redirectTo?
     <div className="group rounded-lg overflow-hidden border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <Image
-          src={p.image}
+          src={p.image || "/kklogo.jpg"}
           alt={p.title}
           fill
           sizes="(min-width:1024px) 25vw, 50vw"

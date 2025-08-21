@@ -21,7 +21,7 @@ export default function BlogTeasers() {
           {POSTS.map((p) => (
             <article key={p.id} className="rounded-lg border border-gray-200 bg-white overflow-hidden">
               <div className="relative aspect-[16/9] bg-gray-100">
-                <Image src="/kklogo.jfif" alt={p.title} fill className="object-cover" />
+                <Image src="/kklogo.jpg" alt={p.title} fill className="object-cover" />
               </div>
               <div className="p-5 space-y-2">
                 <p className="text-[11px] text-gray-500">

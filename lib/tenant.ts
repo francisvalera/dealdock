@@ -30,14 +30,14 @@ const DEV_DOMAIN_MAP: Record<string, TenantConfig> = {
     tenantId: "kuya-kardz",
     name: "Kuya Kardz Motorcycle Trading",
     brandName: "KUYA KARDZ",
-    logoUrl: "/kklogo.jfif",
+    logoUrl: "/kklogo.jpg",
     phone: "09773862419",
   },
   "kuyakardz.ph": {
     tenantId: "kuya-kardz",
     name: "Kuya Kardz Motorcycle Trading",
     brandName: "KUYA KARDZ",
-    logoUrl: "/kklogo.jfif",
+    logoUrl: "/kklogo.jpg",
     phone: "09773862419",
   },
 };

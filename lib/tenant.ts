@@ -5,12 +5,14 @@ export type Role = "ADMIN" | "STAFF" | "CUSTOMER";
 
 export type MenuItem = { label: string; href: string };
 export type TenantConfig = {
+  /** Stable ID used across DB, analytics, etc. */
   tenantId: string;
+  /** Full site title for SEO/tab */
+  name?: string;
+  /** Short brand shown in the header logo */
   brandName: string;
   logoUrl: string;
   phone?: string;
-  freeShippingText?: string;
-  menus: MenuItem[];
 };
 
 async function getRequestHost(): Promise<string> {
@@ -26,16 +28,17 @@ async function getRequestHost(): Promise<string> {
 const DEV_DOMAIN_MAP: Record<string, TenantConfig> = {
   "localhost:3000": {
     tenantId: "kuya-kardz",
+    name: "Kuya Kardz Motorcycle Trading",
     brandName: "KUYA KARDZ",
     logoUrl: "/kklogo.jfif",
     phone: "09773862419",
-    freeShippingText: "Free shipping on orders over ₱2,000",
-    menus: [
-      { label: "HOME", href: "/" },
-      { label: "PRODUCTS", href: "/products" },
-      { label: "BLOG", href: "/blog" },
-      { label: "CONTACT", href: "/contact" },
-    ],
+  },
+  "kuyakardz.ph": {
+    tenantId: "kuya-kardz",
+    name: "Kuya Kardz Motorcycle Trading",
+    brandName: "KUYA KARDZ",
+    logoUrl: "/kklogo.jfif",
+    phone: "09773862419",
   },
 };
 

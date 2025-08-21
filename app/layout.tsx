@@ -1,24 +1,29 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { resolveTenantByHost } from "@/lib/tenant";
+import { getMenus } from "@/lib/nav";
 import { Header } from "@/components/Header";
+import { countItems } from "@/lib/cart";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Kuya Kardz - Motorcycle Parts & Accessories",
-  icons: [{ rel: "icon", url: "/favicon.svg" }],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const tenant = await resolveTenantByHost();
+  const title = tenant.name ?? tenant.brandName;
+  return { title, icons: [{ rel: "icon", url: "/favicon.svg" }] };
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const tenant = await resolveTenantByHost();
-  const session: null = null; // ← type-safe for build
+  const menus = await getMenus(tenant);
+  const cartCount = await countItems();
+  const session: null = null;
 
   return (
     <html lang="en">
-      <body className={inter.className + " bg-white text-black"}>
-        <Header tenant={tenant} session={session} cartCount={0} />
+      <body className={outfit.className + " bg-white text-black"}>
+        <Header tenant={tenant} menus={menus} session={session} cartCount={cartCount} />
         {children}
       </body>
     </html>

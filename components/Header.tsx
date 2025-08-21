@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Menu, Phone, CircleUserRound } from "lucide-react";
+import { ShoppingCart, Menu, Search, LogIn } from "lucide-react";
 import type { TenantConfig } from "@/lib/tenant";
+import type { MenuItem } from "@/lib/nav";
 import { AdminGate } from "@/components/admin/AdminGate";
 
 export type SessionStub = {
@@ -11,69 +12,77 @@ export type SessionStub = {
 
 export function Header({
   tenant,
+  menus,
   cartCount = 0,
   session,
 }: {
   tenant: TenantConfig;
+  menus: MenuItem[];
   cartCount?: number;
   session?: SessionStub | null;
 }) {
   return (
     <header className="w-full">
-      <div className="bg-black text-white py-2 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-6">
-              <span className="flex items-center">
-                <Phone size={12} className="mr-1" /> {tenant.phone ?? "Contact us"}
-              </span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span>{tenant.freeShippingText ?? "Free shipping on orders over ₱2,000"}</span>
-            </div>
+      {/* Promo strip (scrolls away) */}
+      <div className="bg-red-600 text-white text-xs font-semibold">
+        <div className="relative overflow-hidden">
+          <div className="marquee py-2">
+            FREE SHIPPING ON ORDERS OVER ₱2,000! • CASH ON DELIVERY • FAST SHIPPING NATIONWIDE •
+            FREE SHIPPING ON ORDERS OVER ₱2,000! • CASH ON DELIVERY • FAST SHIPPING NATIONWIDE •
           </div>
         </div>
       </div>
 
-      <div id="main-header" className="sticky top-0 z-50 transition-all duration-300 bg-white shadow-sm">
+      {/* Sticky header block (kept while scrolling) */}
+      <div className="sticky top-0 z-40 bg-white shadow-sm">
+        {/* Main row: logo • centered/narrow search • actions */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
+            {/* Brand */}
             <Link href="/" className="flex items-center space-x-3">
-              <Image src={tenant.logoUrl} alt={`${tenant.brandName} Logo`} width={48} height={48} className="h-12 w-12 rounded-xl shadow-md" />
+              <Image src={tenant.logoUrl} alt={`${tenant.brandName} Logo`} width={48} height={48} className="h-12 w-12 rounded-xl shadow-sm" />
               <div>
-                <h1 className="brand-text text-2xl">{tenant.brandName}</h1>
+                <h1 className="brand-text text-2xl leading-6">{tenant.brandName}</h1>
                 <p className="text-xs text-gray-500 font-medium tracking-wider uppercase">Motorcycle Trading</p>
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center space-x-8">
-              {tenant.menus.map((m) => (
-                <Link key={m.href} href={m.href} className="nav-item">
-                  {m.label}
-                </Link>
-              ))}
-              <AdminGate role={session?.userTenant?.role ?? null}>
-                <Link href="/admin" className="nav-item text-red-600">ADMIN</Link>
-              </AdminGate>
-            </nav>
+            {/* Centered, reduced-width search */}
+            <div className="hidden md:flex md:flex-1 justify-center mx-4">
+              <div className="relative w-full max-w-[520px] lg:max-w-[600px]">
+                <input
+                  placeholder="Search for parts, brands..."
+                  className="w-full rounded-full border border-gray-200 bg-gray-50 pl-5 pr-10 py-3 outline-none focus:bg-white focus:border-gray-300"
+                />
+                <Search size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
 
-            <div className="flex items-center space-x-2">
-              <Link href="/cart" className="relative group p-2">
+            {/* Actions */}
+            <div className="flex items-center gap-4">
+              <Link href="/cart" className="relative p-2" aria-label="Shopping cart">
                 <ShoppingCart size={24} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white border-2 border-white">
+                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white border-2 border-white">
                     {cartCount}
                   </span>
                 )}
               </Link>
 
               {session?.user ? (
-                <Link href="/account" className="hidden sm:flex items-center btn btn-primary gap-2">
-                  <CircleUserRound size={18} />
-                  <span className="truncate max-w-[10rem]">{session.user.name ?? "Account"}</span>
-                </Link>
+                <div className="hidden md:block text-right leading-tight">
+                  <div className="text-sm text-gray-700">Hello, {session.user.name ?? "Kardo"}!</div>
+                  <AdminGate role={session?.userTenant?.role ?? "ADMIN"}>
+                    <Link href="/admin" className="text-xs text-red-600 font-semibold">Admin Panel</Link>
+                  </AdminGate>
+                </div>
               ) : (
-                <Link href="/signin" className="btn btn-primary hidden sm:flex">Sign In</Link>
+                <Link
+                  href="/login"
+                  className="hidden md:inline-flex h-9 items-center gap-2 rounded-full bg-black px-4 text-sm font-semibold text-white leading-none shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                >
+                  <LogIn size={16} /> <span>Login</span>
+                </Link>
               )}
 
               <button className="md:hidden p-2" aria-label="Open menu">
@@ -81,6 +90,39 @@ export function Header({
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="border-t border-gray-200" />
+
+        {/* Menus row (centered, bold) */}
+        <div>
+          <nav className="flex items-center justify-center h-12 text-[13px] md:text-sm font-bold">
+            <ul className="flex w-full justify-center gap-9 lg:gap-12 xl:gap-16 px-4">
+              {menus.map((m) => {
+                const hasDropdown = ["HELMETS & GEARS","PERFORMANCE PARTS","TIRES","ACCESSORIES"].includes(m.label);
+                return (
+                  <li key={m.href} className="relative group">
+                    <Link
+                      href={m.href}
+                      className="uppercase text-gray-800 tracking-wide relative after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[3px] after:bg-red-600 after:w-0 group-hover:after:w-full transition-[width] duration-200">
+                      {m.label}
+                    </Link>
+
+                    {hasDropdown && (
+                      <div className="pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 opacity-0 absolute left-1/2 -translate-x-1/2 top-9 bg-white border border-gray-200 shadow-lg rounded-lg p-4 min-w-[260px]">
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <Link href={`${m.href}/category-a`} className="hover:text-red-600">Category A</Link>
+                          <Link href={`${m.href}/category-b`} className="hover:text-red-600">Category B</Link>
+                          <Link href={`${m.href}/category-c`} className="hover:text-red-600">Category C</Link>
+                          <Link href={`${m.href}/category-d`} className="hover:text-red-600">Category D</Link>
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
         </div>
       </div>
     </header>

@@ -27,7 +27,7 @@ export default function ProductCard({ p, redirectTo }: { p: Product; redirectTo?
           </span>
           <div className="flex-shrink-0">
             <AddToCartForm productId={p.id} redirectTo={redirectTo} />
-          </div>
+            </div>
         </div>
       </div>
       {/* subtle bottom accent on hover */}

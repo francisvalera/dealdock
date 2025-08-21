@@ -12,7 +12,9 @@ return (
 <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-500">Top picks from our curated collection of premium parts.</p>
 </div>
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-{featured.map(p => (<ProductCard key={p.id} p={p} redirectTo={undefined} />))}
+{featured.map((p) => (
+    <ProductCard key={p.id} p={p} /* ProductCard MUST forward redirectTo to AddToCartForm */ />
+  ))}
 </div>
 </div>
 </section>

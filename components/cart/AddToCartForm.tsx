@@ -18,18 +18,18 @@ function Submit() {
 
 export default function AddToCartForm({
   productId,
-  redirectTo, // omit for silent behavior
   qty = 1,
+  redirectTo, // pass only if you WANT a redirect
 }: {
   productId: string;
-  redirectTo?: string;
   qty?: number;
+  redirectTo?: string;
 }) {
   const router = useRouter();
 
   async function action(formData: FormData) {
-    await addToCart(formData);     // no redirect in server action → silent
-    router.refresh();              // re-renders header to update cart badge
+    await addToCart(formData); // returns JSON; no navigation
+    router.refresh();          // header/cart badge updates
   }
 
   return (

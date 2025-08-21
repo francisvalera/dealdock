@@ -22,9 +22,9 @@ export function Header({
   session?: SessionStub | null;
 }) {
   return (
-    <header className="w-full">
+    <>
       {/* Promo strip (scrolls away) */}
-      <div className="bg-red-600 text-white text-xs font-semibold">
+      <div id="promoStrip" className="bg-red-600 text-white text-xs font-semibold">
         <div className="relative overflow-hidden">
           <div className="marquee py-2">
             FREE SHIPPING ON ORDERS OVER ₱2,000! • CASH ON DELIVERY • FAST SHIPPING NATIONWIDE •
@@ -33,9 +33,9 @@ export function Header({
         </div>
       </div>
 
-      {/* Sticky header block (kept while scrolling) */}
-      <div className="sticky top-0 z-40 bg-white shadow-sm">
-        {/* Main row: logo • centered/narrow search • actions */}
+      {/* Sticky header — THIS sticks to viewport top */}
+      <header className="sticky top-0 z-50 bg-white/95 shadow-sm">
+        {/* Main row: logo • search • actions */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Brand */}
@@ -92,39 +92,38 @@ export function Header({
           </div>
         </div>
 
+        {/* Gray divider under main row */}
         <div className="border-t border-gray-200" />
 
-        {/* Menus row (centered, bold) */}
-        <div>
-          <nav className="flex items-center justify-center h-12 text-[13px] md:text-sm font-bold">
-            <ul className="flex w-full justify-center gap-9 lg:gap-12 xl:gap-16 px-4">
-              {menus.map((m) => {
-                const hasDropdown = ["HELMETS & GEARS","PERFORMANCE PARTS","TIRES","ACCESSORIES"].includes(m.label);
-                return (
-                  <li key={m.href} className="relative group">
-                    <Link
-                      href={m.href}
-                      className="uppercase text-gray-800 tracking-wide relative after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[3px] after:bg-red-600 after:w-0 group-hover:after:w-full transition-[width] duration-200">
-                      {m.label}
-                    </Link>
-
-                    {hasDropdown && (
-                      <div className="pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 opacity-0 absolute left-1/2 -translate-x-1/2 top-9 bg-white border border-gray-200 shadow-lg rounded-lg p-4 min-w-[260px]">
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <Link href={`${m.href}/category-a`} className="hover:text-red-600">Category A</Link>
-                          <Link href={`${m.href}/category-b`} className="hover:text-red-600">Category B</Link>
-                          <Link href={`${m.href}/category-c`} className="hover:text-red-600">Category C</Link>
-                          <Link href={`${m.href}/category-d`} className="hover:text-red-600">Category D</Link>
-                        </div>
+        {/* Menus row (full width, centered, underline hover, dropdowns) */}
+        <nav className="flex items-center justify-center h-12 text-[13px] md:text-sm font-bold">
+          <ul className="flex w-full justify-center gap-9 lg:gap-12 xl:gap-16 px-4">
+            {menus.map((m) => {
+              const hasDropdown = ["HELMETS & GEARS","PERFORMANCE PARTS","TIRES","ACCESSORIES"].includes(m.label);
+              return (
+                <li key={m.href} className="relative group">
+                  <Link
+                    href={m.href}
+                    className="uppercase text-gray-800 tracking-wide relative after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[3px] after:bg-red-600 after:w-0 group-hover:after:w-full transition-[width] duration-200"
+                  >
+                    {m.label}
+                  </Link>
+                  {hasDropdown && (
+                    <div className="pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 opacity-0 absolute left-1/2 -translate-x-1/2 top-9 bg-white border border-gray-200 shadow-lg rounded-lg p-4 min-w-[260px]">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <Link href={`${m.href}/category-a`} className="hover:text-red-600">Category A</Link>
+                        <Link href={`${m.href}/category-b`} className="hover:text-red-600">Category B</Link>
+                        <Link href={`${m.href}/category-c`} className="hover:text-red-600">Category C</Link>
+                        <Link href={`${m.href}/category-d`} className="hover:text-red-600">Category D</Link>
                       </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </header>
+    </>
   );
 }

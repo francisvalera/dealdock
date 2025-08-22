@@ -20,3 +20,12 @@ export async function addToCart(formData: FormData) {
   // No navigation: return a small payload for client UX if needed
   return { ok: true, count: cart.items.reduce((s, it) => s + it.qty, 0) };
 }
+
+export async function addToCartSilent(productId: string, qty: number = 1): Promise<number> {
+  const cart = await readCart();
+  const found = cart.items.find(i => i.productId === productId);
+  if (found) found.qty += qty;
+  else cart.items.push({ productId, qty });
+  await writeCart(cart);
+  return cart.items.find(i => i.productId === productId)!.qty;
+}

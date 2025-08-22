@@ -1,9 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Menu, Search, LogIn } from "lucide-react";
+import { Menu, Search, LogIn } from "lucide-react";
 import type { TenantConfig } from "@/lib/tenant";
 import type { MenuItem } from "@/lib/nav";
 import { AdminGate } from "@/components/admin/AdminGate";
+import CartIconClient from "@/components/header/CartIconClient";
+
+// const [bump, setBump] = useState(false);
+
+// useEffect(() => {
+//   const onUpdated = () => {
+//     setBump(true);
+//     const t = setTimeout(() => setBump(false), 400);
+//     return () => clearTimeout(t);
+//   };
+//   window.addEventListener("cart:updated", onUpdated);
+//   return () => window.removeEventListener("cart:updated", onUpdated);
+// }, []);
 
 export type SessionStub = {
   user?: { name?: string | null } | null;
@@ -60,14 +73,15 @@ export function Header({
 
             {/* Actions */}
             <div className="flex items-center gap-4">
-              <Link href="/cart" className="relative p-2" aria-label="Shopping cart">
+              <CartIconClient cartCount={cartCount} />
+              {/* <Link href="/cart" className="relative p-2" aria-label="Shopping cart">
                 <ShoppingCart size={24} />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white border-2 border-white">
                     {cartCount}
                   </span>
                 )}
-              </Link>
+              </Link> */}
 
               {session?.user ? (
                 <div className="hidden md:block text-right leading-tight">

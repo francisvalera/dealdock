@@ -1,37 +1,42 @@
 import Image from "next/image";
 import AddToCartForm from "@/components/cart/AddToCartForm";
 import { type Product } from "@/lib/data/products";
+import InCartBadge from "@/components/cart/InCartBadge";
+import { IMG_SIZES, noimage } from "@/lib/images";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
-export default function ProductCard({ p, redirectTo }: { p: Product; redirectTo?: string }) {
+export default function ProductCard({ p }: { p: Product }) {
+  const price = `₱${Number(p.price ?? 0).toLocaleString()}`;
+  const isFallback = !p.image || p.image.length === 0;
+  const src: string | StaticImport = isFallback ? noimage : p.image;
   return (
-    <div className="group rounded-lg overflow-hidden border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+    <article className="group relative rounded-2xl border border-gray-200 bg-white transition-all duration-300 ease-out">
+      <div className="relative aspect-square overflow-hidden rounded-t-2xl bg-gray-50">
+        <InCartBadge productId={p.id} />
         <Image
-          src={p.image || "/kklogo.jpg"}
+          src={src}
           alt={p.title}
           fill
-          sizes="(min-width:1024px) 25vw, 50vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes={IMG_SIZES.product}
+          className="card-zoom"
+          placeholder={isFallback ? "blur" : "empty"}
         />
       </div>
-      <div className="p-6 space-y-2">
-        <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-          {p.brand}
-        </p>
-        <h3 className="font-bold text-base text-gray-900 leading-snug line-clamp-2">
-          {p.title}
-        </h3>
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-2xl font-black text-red-500">
-            ₱{p.price.toLocaleString()}
-          </span>
-          <div className="flex-shrink-0">
-            <AddToCartForm productId={p.id} redirectTo={redirectTo} />
-            </div>
+
+      {/* Body */}
+      <div className="p-6">
+        <p className="text-[11px] font-semibold tracking-wider text-gray-500 uppercase">{p.brand}</p>
+        <h3 className="mt-1 line-clamp-2 font-semibold text-gray-900">{p.title}</h3>
+
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xl text-red-500">{price}</span>
+
+          {/* slide-in CTA on hover (still clickable when not hovered) */}
+          <div className="cta-slide">
+            <AddToCartForm productId={p.id} />
+          </div>
         </div>
       </div>
-      {/* subtle bottom accent on hover */}
-      <div className="h-0.5 bg-transparent group-hover:bg-red-500 transition-colors duration-300" />
-    </div>
+    </article>
   );
 }

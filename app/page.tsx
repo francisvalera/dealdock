@@ -3,7 +3,7 @@ import FeaturedProducts from "@/components/home/FeaturedProducts";
 import BlogTeasers from "@/components/home/BlogTeasers";
 import Footer from "@/components/home/Footer";
 import { resolveTenantByHost } from "@/lib/tenant";
-
+import ReadyToRide from "@/components/home/ReadyToRide";
 
 export default async function HomePage() {
 const tenant = await resolveTenantByHost();
@@ -12,6 +12,7 @@ return (
 <Hero />
 <FeaturedProducts />
 <BlogTeasers />
+<ReadyToRide />
 <Footer tenant={tenant} />
 </main>
 );

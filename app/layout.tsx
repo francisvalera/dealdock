@@ -5,6 +5,7 @@ import { resolveTenantByHost } from "@/lib/tenant";
 import { getMenus } from "@/lib/nav";
 import { Header } from "@/components/Header";
 import { countItems } from "@/lib/cart";
+import CartEventBridge from "@/components/cart/CartEventBridge";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={outfit.className + " bg-white text-black"}>
         <Header tenant={tenant} menus={menus} session={session} cartCount={cartCount} />
         {children}
+        <CartEventBridge />
       </body>
     </html>
   );

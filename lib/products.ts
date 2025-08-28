@@ -66,11 +66,11 @@ const includeForCard = {
   Brand: { select: { name: true } },
   Subcategory: { select: { name: true, Category: { select: { name: true } } } },
   ProductImage: { select: { url: true }, take: 1 },
-} satisfies Prisma.ProductInclude;
+} as const;
 
-function toUIProduct(
-  p: Prisma.ProductGetPayload<{ include: typeof includeForCard }>
-): UIProduct {
+type CardRow = Prisma.ProductGetPayload<{ include: typeof includeForCard }>;
+
+function toUIProduct(p: CardRow): UIProduct {
   return {
     id: p.id,
     title: p.name,

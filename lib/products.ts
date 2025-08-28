@@ -125,19 +125,21 @@ export async function listFeaturedProducts(limit = 8): Promise<UIProduct[]> {
 }
 
 export async function listBrandNames(): Promise<string[]> {
-  const rows = await prisma.brand.findMany({
+  type NameRow = { name: string };
+  const rows: NameRow[] = await prisma.brand.findMany({
     select: { name: true },
     orderBy: { name: "asc" },
   });
-  return rows.map((r) => r.name);
+  return rows.map((r: NameRow) => r.name);
 }
 
 export async function listCategoryNames(): Promise<string[]> {
-  const rows = await prisma.category.findMany({
+  type NameRow = { name: string };
+  const rows: NameRow[] = await prisma.category.findMany({
     select: { name: true },
     orderBy: { name: "asc" },
   });
-  return rows.map((r) => r.name);
+  return rows.map((r: NameRow) => r.name);
 }
 
 export async function listCategoryTree(): Promise<CategoryTree> {

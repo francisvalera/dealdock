@@ -4,6 +4,12 @@ import { prisma } from "@/lib/prisma";
 
 export type CategoryTree = Array<{ name: string; subcategories: string[] }>;
 
+function toNumber(x: unknown): number {
+  if (typeof x === "number") return x;
+  const n = Number(x as unknown);
+  return Number.isFinite(n) ? n : 0;
+}
+
 export async function listCategoryTree(): Promise<CategoryTree> {
   // Type the rows explicitly so map() params aren’t implicitly any.
   type SubcatRow = { name: string };
@@ -68,13 +74,20 @@ const includeForCard = {
   ProductImage: { select: { url: true }, take: 1 },
 } as const;
 
-type CardRow = Prisma.ProductGetPayload<{ include: typeof includeForCard }>;
+// type CardRow = Prisma.ProductGetPayload<{ include: typeof includeForCard }>;
 
-function toUIProduct(p: CardRow): UIProduct {
+function toUIProduct(p: {
+  id: string;
+  name: string;
+  price: unknown;
+  Brand?: { name: string } | null;
+  Subcategory?: { name: string; Category?: { name: string } | null } | null;
+  ProductImage?: Array<{ url: string | null }> | null;
+}): UIProduct {
   return {
     id: p.id,
     title: p.name,
-    price: Number(p.price),
+    price: toNumber(p.price),
     brand: p.Brand?.name ?? null,
     category: p.Subcategory?.Category?.name ?? null,
     subcategory: p.Subcategory?.name ?? null,

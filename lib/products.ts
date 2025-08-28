@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma";
 
 export type CategoryTree = Array<{ name: string; subcategories: string[] }>;
 
-/**
- * Return categories with their subcategories for the sidebar tree.
- * Matches schema: Category -> Subcategory[]
- */
 export async function listCategoryTree(): Promise<CategoryTree> {
-  const rows = await prisma.category.findMany({
+  // Type the rows explicitly so map() params aren’t implicitly any.
+  type SubcatRow = { name: string };
+  type CatRow = { name: string; Subcategory: SubcatRow[] };
+
+  const rows: CatRow[] = await prisma.category.findMany({
     select: {
       name: true,
       Subcategory: { select: { name: true }, orderBy: { name: "asc" } },
@@ -17,9 +17,9 @@ export async function listCategoryTree(): Promise<CategoryTree> {
     orderBy: { name: "asc" },
   });
 
-  return rows.map((c) => ({
+  return rows.map((c: CatRow) => ({
     name: c.name,
-    subcategories: c.Subcategory.map((s) => s.name),
+    subcategories: c.Subcategory.map((s: SubcatRow) => s.name),
   }));
 }
 

@@ -1,69 +1,163 @@
 import Image from "next/image";
-import Link from "next/link";              // ← add this
-import type { TenantConfig } from "@/lib/tenant";
+import Link from "next/link";
+import { MapPin } from "lucide-react";
+import { getSettings } from "@/lib/settings";
 
-export default function Footer({ tenant }: { tenant: TenantConfig }) {
+export default async function Footer() {
+  const s = await getSettings();
+
   return (
-    <footer className="footer-gradient text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <Image src={tenant.logoUrl} alt={`${tenant.brandName} Logo`} width={48} height={48} className="h-12 w-12 rounded-xl" />
+    <footer className="bg-neutral-950 text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Image src={s.logoUrl} alt={`${s.brandName} Logo`} width={44} height={44} className="h-11 w-11 rounded-lg" />
               <div>
-                <h3 className="text-2xl font-bold text-white">{tenant.brandName}</h3>
-                <p className="text-sm text-gray-300">MOTORCYCLE TRADING</p>
+                <h4 className="text-xl font-extrabold leading-5">{s.brandName}</h4>
+                <p className="text-sm text-neutral-300">Motorcycle Trading</p>
               </div>
             </div>
-            <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-              Your trusted partner for premium motorcycle parts and accessories. Quality products, expert service, unbeatable prices.
-            </p>
+            <p className="text-neutral-300">Your trusted partner for premium motorcycle parts and accessories.</p>
           </div>
 
           <div>
-            <h4 className="font-bold text-lg mb-6 text-white">QUICK LINKS</h4>
-            <ul className="space-y-3 text-gray-300">
-              <li><Link href="/" className="hover:text-white">Home</Link></li>
-              <li><Link href="/products" className="hover:text-white">All Parts</Link></li>
-              <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
-              <li><Link href="/about" className="hover:text-white">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-            </ul>
+            <h5 className="text-sm font-extrabold tracking-wide">OUR LOCATIONS</h5>
+            <div className="mt-4 space-y-5">
+              <div className="flex items-start gap-3">
+                <MapPin size={18} className="mt-0.5 text-red-500" />
+                <div>
+                  <div className="font-semibold">Valenzuela City</div>
+                  <div className="text-sm text-neutral-300">20 G. Molina St., Canumay East</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin size={18} className="mt-0.5 text-red-500" />
+                <div>
+                  <div className="font-semibold">Aurora Province</div>
+                  <div className="text-sm text-neutral-300">Brgy. Wenceslao, Maria Aurora</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h4 className="font-bold text-lg mb-6 text-white">SERVICES</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h5 className="font-semibold text-white mb-3">PAYMENT</h5>
-                <ul className="space-y-1 text-sm text-gray-300">
-                  <li>Cash on Delivery</li>
-                  <li>BDO / GCash</li>
-                </ul>
-              </div>
-              <div>
-                <h5 className="font-semibold text-white mb-3">DELIVERY</h5>
-                <ul className="space-y-1 text-sm text-gray-300">
-                  <li>LBC / J&amp;T</li>
-                  <li>Local Pickup</li>
-                </ul>
-              </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <h6 className="text-sm font-extrabold tracking-wide">PAYMENT</h6>
+              <ul className="mt-3 space-y-1 text-sm text-neutral-300">
+                <li>Cash on Delivery</li>
+                <li>GCash / Maya</li>
+              </ul>
+            </div>
+            <div>
+              <h6 className="text-sm font-extrabold tracking-wide">DELIVERY</h6>
+              <ul className="mt-3 space-y-1 text-sm text-neutral-300">
+                <li>LBC / J&amp;T</li>
+                <li>Local Pickup</li>
+              </ul>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} {tenant.name ?? tenant.brandName}. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/terms" className="text-sm text-gray-400 hover:text-white">Terms of Service</Link>
-              <Link href="/privacy" className="text-sm text-gray-400 hover:text-white">Privacy Policy</Link>
-            </div>
-          </div>
+        <div className="mt-10 border-t border-white/10" />
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="text-sm text-neutral-400">
+            © {new Date().getFullYear()} {s.name}. All rights reserved.
+          </p>
+          <nav className="flex items-center gap-6">
+            <Link href="/about" className="text-sm text-neutral-300 hover:text-white">About Us</Link>
+            <Link href="/contact" className="text-sm text-neutral-300 hover:text-white">Contact</Link>
+          </nav>
         </div>
       </div>
     </footer>
   );
 }
+
+
+// // components/home/Footer.tsx
+// import Image from "next/image";
+// import Link from "next/link";
+// import type { TenantConfig } from "@/lib/tenant";
+// import { MapPin } from "lucide-react";
+
+// export default function Footer({ tenant }: { tenant: TenantConfig }) {
+//   const brandName = tenant.brandName ?? "KUYA KARDS";
+//   const displayName = tenant.name ?? brandName;
+//   const logoUrl = tenant.logoUrl ?? "/favicon.svg";
+
+//   return (
+//     <footer className="bg-neutral-950 text-white">
+//       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+//         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+//           {/* Brand / Blurb */}
+//           <div className="space-y-4">
+//             <div className="flex items-center gap-3">
+//               <Image src={logoUrl} alt={`${brandName} Logo`} width={44} height={44} className="h-11 w-11 rounded-lg" />
+//               <div>
+//                 <h4 className="text-xl font-extrabold leading-5">{brandName}</h4>
+//                 <p className="text-sm text-neutral-300">Motorcycle Trading</p>
+//               </div>
+//             </div>
+//             <p className="text-neutral-300">
+//               Your trusted partner for premium motorcycle parts and accessories.
+//             </p>
+//           </div>
+
+//           {/* Locations */}
+//           <div>
+//             <h5 className="text-sm font-extrabold tracking-wide">OUR LOCATIONS</h5>
+//             <div className="mt-4 space-y-5">
+//               <div className="flex items-start gap-3">
+//                 <MapPin size={18} className="mt-0.5 text-red-500" />
+//                 <div>
+//                   <div className="font-semibold">Valenzuela City</div>
+//                   <div className="text-sm text-neutral-300">20 G. Molina St., Canumay East</div>
+//                 </div>
+//               </div>
+//               <div className="flex items-start gap-3">
+//                 <MapPin size={18} className="mt-0.5 text-red-500" />
+//                 <div>
+//                   <div className="font-semibold">Aurora Province</div>
+//                   <div className="text-sm text-neutral-300">Brgy. Wenceslao, Maria Aurora</div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Services */}
+//           <div className="grid grid-cols-2 gap-6">
+//             <div>
+//               <h6 className="text-sm font-extrabold tracking-wide">PAYMENT</h6>
+//               <ul className="mt-3 space-y-1 text-sm text-neutral-300">
+//                 <li>Cash on Delivery</li>
+//                 <li>GCash / Maya</li>
+//               </ul>
+//             </div>
+//             <div>
+//               <h6 className="text-sm font-extrabold tracking-wide">DELIVERY</h6>
+//               <ul className="mt-3 space-y-1 text-sm text-neutral-300">
+//                 <li>LBC / J&amp;T</li>
+//                 <li>Local Pickup</li>
+//               </ul>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Divider */}
+//         <div className="mt-10 border-t border-white/10" />
+
+//         {/* Bottom bar */}
+//         <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
+//           <p className="text-sm text-neutral-400">
+//             © {new Date().getFullYear()} {displayName}. All rights reserved.
+//           </p>
+//           <nav className="flex items-center gap-6">
+//             <Link href="/about" className="text-sm text-neutral-300 hover:text-white">About Us</Link>
+//             <Link href="/contact" className="text-sm text-neutral-300 hover:text-white">Contact</Link>
+//           </nav>
+//         </div>
+//       </div>
+//     </footer>
+//   );
+// }

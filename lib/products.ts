@@ -175,6 +175,11 @@ export async function getProductDetail(id: string): Promise<UIProductDetail> {
 
   if (!row) notFound();
 
+  type ImgRow = { url: string | null };
+  const imgRows: ImgRow[] = Array.isArray(row.ProductImage)
+    ? (row.ProductImage as ImgRow[])
+    : [];
+
   return {
     id: row.id,
     title: row.name,
@@ -187,10 +192,9 @@ export async function getProductDetail(id: string): Promise<UIProductDetail> {
     brand: row.Brand?.name ?? null,
     category: row.Subcategory?.Category?.name ?? null,
     subcategory: row.Subcategory?.name ?? null,
-    images: (row.ProductImage ?? []).map((i) => i.url ?? "/noimage.png"),
+    images: imgRows.map((img: ImgRow) => img.url ?? "/noimage.png"), // <- typed param
   };
 }
-
 
 // import { notFound } from "next/navigation";
 // import type { Prisma } from "@prisma/client";
